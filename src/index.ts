@@ -5,21 +5,17 @@ import { Readline } from "readline/promises";
 const serialport = new SerialPort({ path: "COM4", baudRate: 115200 })
 
 const lineStream = serialport.pipe(new ReadlineParser({ delimiter: "\r\n" }))
-lineStream.on("data",e=>console.log(e))
+lineStream.on("data", press)
 // serialport.on("data", press)
-function press(buf: Buffer) {
-  const str = buf.toString()
-  console.log(str)
-  const indx = str.split("\n").map(e => e.split(" "))
-  console.log(indx)
-  for (const idx of indx) {
-    console.log(idx)
-    console.log(idx[0])
-    console.log(idx[1])
-    if (idx[1] === "1") {
-      exec(commandTable[parseInt(idx[0])])
-    }
+function press(buf: string) {
+  console.log(buf)
+  const indx = buf.split(" ")
+  console.log(indx[0])
+  console.log(indx[1])
+  if (indx[1] === "1") {
+    exec(commandTable[parseInt(indx[0])])
   }
 }
+
 
 const commandTable = ["steam", "discord",/* put your shell commands here*/]
