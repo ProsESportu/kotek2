@@ -1,9 +1,12 @@
-import { SerialPort } from "serialport";
+import { SerialPort, ReadlineParser } from "serialport";
 import { exec } from "node:child_process";
+import { Readline } from "readline/promises";
 
 const serialport = new SerialPort({ path: "COM4", baudRate: 115200 })
 
-serialport.on("data", press)
+const lineStream = serialport.pipe(new ReadlineParser({ delimiter: "\r\n" }))
+lineStream.on("data",e=>console.log(e))
+// serialport.on("data", press)
 function press(buf: Buffer) {
   const str = buf.toString()
   console.log(str)
